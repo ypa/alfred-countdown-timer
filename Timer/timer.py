@@ -71,19 +71,21 @@ def show_usage():
     notify('Timer usage', 'timer [minutes] [optional: title]')
 
 def notify(title, subtitle=None):
-    """Display a NSUserNotification on Mac OS X >= 10.8"""
-    NSUserNotification = objc.lookUpClass('NSUserNotification')
-    NSUserNotificationCenter = objc.lookUpClass('NSUserNotificationCenter')
-    if not NSUserNotification or not NSUserNotificationCenter:
-        return
+    try:
+        NSUserNotification = objc.lookUpClass('NSUserNotification')
+        NSUserNotificationCenter = objc.lookUpClass('NSUserNotificationCenter')
+        if not NSUserNotification or not NSUserNotificationCenter:
+            return
 
-    notification = NSUserNotification.alloc().init()
-    notification.setTitle_(str(title))
-    if subtitle:
-        notification.setSubtitle_(str(subtitle))
+        notification = NSUserNotification.alloc().init()
+        notification.setTitle_(str(title))
+        if subtitle:
+            notification.setSubtitle_(str(subtitle))
 
-    notifcation_center = NSUserNotificationCenter.defaultUserNotificationCenter()
-    notifcation_center.scheduleNotification_(notification)
+        notifcation_center = NSUserNotificationCenter.defaultUserNotificationCenter()
+        notifcation_center.scheduleNotification_(notification)
+    except:
+        print title + "\n----------------\n" + subtitle
 
 def play_sound(filename):
     subprocess.Popen(['afplay', filename])
